@@ -1,0 +1,14 @@
+node_modules/
+dist/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+demo_result.json
+examples/base_sepolia_demo/test_list.txt
+*.key
+
+# local virtualenvs and build output
+.venv*/
+python/build/
+python/dist/
+*.tgz

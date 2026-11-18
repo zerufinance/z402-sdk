@@ -1,0 +1,12 @@
+{
+  "name": "z402-examples",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@x402/core": "2.31.0",
+    "@x402/evm": "2.31.0",
+    "@x402/fetch": "2.31.0",
+    "viem": "2.57.4",
+    "zeru-z402": "file:../typescript"
+  }
+}

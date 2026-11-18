@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zeru-z402"
+version = "0.1.0"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+description = "Before an x402 agent pays a wallet, ask zScreen: PAY or DON'T PAY. Buyer and seller guards for x402."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Zeru AI" }]
+keywords = ["x402", "payments", "agents", "wallet-screening", "sanctions", "compliance", "zscreen", "usdc"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Office/Business :: Financial",
+  "Topic :: Security",
+  "Typing :: Typed",
+]
+dependencies = [
+  "x402>=2.22,<3",
+  "httpx>=0.27,<1",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8", "x402[evm,httpx,requests]"]
+
+[project.urls]
+Homepage = "https://github.com/zerufinance/z402-sdk"
+Source = "https://github.com/zerufinance/z402-sdk"
+Issues = "https://github.com/zerufinance/z402-sdk/issues"
+Changelog = "https://github.com/zerufinance/z402-sdk/blob/main/CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+z402 = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

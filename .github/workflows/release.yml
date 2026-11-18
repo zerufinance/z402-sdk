@@ -1,0 +1,101 @@
+name: release
+
+# Push a tag vX.Y.Z (equal to both package versions) to publish zeru-z402 to PyPI and npm.
+# Both registries use trusted publishing (OIDC): there is no PyPI or npm token secret.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: verify, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+
+      - name: Tag must equal both package versions
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          py=$(python -c "import re,pathlib;print(re.search(r'^version\s*=\s*\"([^\"]+)\"',pathlib.Path('python/pyproject.toml').read_text(),re.M).group(1))")
+          js=$(node -p "require('./typescript/package.json').version")
+          echo "tag $TAG, python $py, npm $js"
+          test "$TAG" = "v$py" && test "$TAG" = "v$js"
+
+      - name: Python tests
+        run: |
+          python -m pip install -e "python[test]" build twine
+          cd python && python -m pytest -q
+      - name: TypeScript tests
+        working-directory: typescript
+        run: |
+          npm ci
+          npm run build
+          npm test
+
+      - name: Release check (builds the wheel, sdist and npm tarball, and checks them)
+        env:
+          TAG: ${{ github.ref_name }}
+        run: python scripts/release_check.py --out release-out --expect-version "${TAG#v}"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: python-dist
+          path: release-out/python/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: npm-dist
+          path: release-out/npm/
+          if-no-files-found: error
+
+  pypi:
+    name: publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/zeru-z402/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: python-dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
+        with:
+          packages-dir: dist/
+
+  npm:
+    name: publish to npm
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+      # npm trusted publishing (OIDC) needs npm CLI 11.5.1 or later; Node 22 ships npm 10.
+      - run: npm install -g "npm@^11.5.1"
+      - run: npm --version
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: npm-dist
+          path: npm-dist/
+      - name: Publish the checked tarball with provenance
+        run: npm publish npm-dist/*.tgz --provenance --access public

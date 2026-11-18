@@ -1,0 +1,5 @@
+# The sdist ships the library only. The tests stay in the git repository: they hold
+# deliberately insecure URLs (http to a non-local host) to prove the SDK refuses them,
+# and the release check rejects any artifact that contains such a URL.
+prune tests
+global-exclude __pycache__ *.py[cod]
