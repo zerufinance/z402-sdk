@@ -16,7 +16,7 @@ from .errors import Z402Blocked, find_block
 from .guard import Decision, decide, guard
 from .seller import seller_guard
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "guard", "seller_guard", "GROUPS", "DEFAULT_BASE_URL", "DEFAULT_TIMEOUT_S", "KEY_URL",

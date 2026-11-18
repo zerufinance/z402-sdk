@@ -4,6 +4,13 @@ All notable changes to this project are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.1.1] - 2026-11-18
+
+### Fixed
+
+- npm: the package's repository, homepage and issues links now point to
+  https://github.com/zerufinance/z402-sdk. No code changes.
+
 ## [0.1.0] - 2026-11-18
 
 First public release of `zeru-z402` for Python (PyPI) and TypeScript (npm).
@@ -30,4 +37,5 @@ First public release of `zeru-z402` for Python (PyPI) and TypeScript (npm).
 - Default timeout of 5 seconds, configurable (`timeout` / `timeoutMs`).
 - Python: typed (`py.typed`). TypeScript: ESM only, Node 20 or later, type declarations included.
 
+[0.1.1]: https://github.com/zerufinance/z402-sdk/releases/tag/v0.1.1
 [0.1.0]: https://github.com/zerufinance/z402-sdk/releases/tag/v0.1.0

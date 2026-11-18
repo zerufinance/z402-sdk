@@ -1,6 +1,6 @@
 {
   "name": "zeru-z402",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Before an x402 agent pays a wallet, ask zScreen: PAY or DON'T PAY. Buyer guard and seller guard for x402.",
   "license": "Apache-2.0",
   "author": "Zeru AI",

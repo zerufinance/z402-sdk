@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "zeru-z402"
-version = "0.1.0"
+version = "0.1.1"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 description = "Before an x402 agent pays a wallet, ask zScreen: PAY or DON'T PAY. Buyer and seller guards for x402."
